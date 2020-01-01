@@ -11,6 +11,6 @@ main:
   - title: "TIL"
     url: /categories/TIL/
   - title: "알고리즘"
-    url: /algorithm/
+    url: /categories/algorithm/
   - title: "Post"
     url: /TIL/

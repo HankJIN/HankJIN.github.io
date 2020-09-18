@@ -1,5 +1,5 @@
 ---
-title:  "파일명 변경 프로그램(File Name Changer)_1"
+title:  "toy project : 파일명 변경 프로그램_1"
 excerpt: "파일명 일괄 변경 프로그램 제작기"
 
 categories:
@@ -40,9 +40,6 @@ doc-font-size: 10px;
     
 - __solution__  
     파일에 대한 접근을 배열에 넣어 한번에 해결하는 방식이 아닌, 파일명을 확인하면서 진행하는 방식으로 진행했다. 
-```console
-!bin/bash
-```
 
 <br><br>  
 
@@ -53,8 +50,103 @@ doc-font-size: 10px;
     - __sol 2. 2PASS__  
   1Pass에서는 모든 파일을 YYMMDDhhmmssms형식으로 변경한다. 이후 2Pass에서 원래의도했던 파일명으로 변경한다. 그렇면, 1Pass에서 시간순을 보장하기에, 변경가능하다.
 
+
+## 소스코드
+
 ```console
-!bin/bash
+#!/bin/bash
+
+#get dir
+echo "enter dir"
+# read dir
+read dir
+empt=""
+if [ $dir == $empt ]; then
+    echo "Error : plase enter dir"
+    read any
+    exit
+fi
+#read file
+echo "start reading.."
+echo -ls
+array=(${dir}/*.*)
+if [ -f "${array[0]}" ] ; then
+    echo "The number of file is  ${#array[@]}"
+    echo ${array[@]}
+else
+    echo "Error : is empty folder!"
+    read any
+    exit
+fi
+
+echo "Press Enter to continue"
+read any
+
+#changeFileName
+#1Pass
+echo "[1Pass] change FileName yymdHMSN"
+val0=1
+val1=2
+for var in $(seq 0 `expr ${#array[@]} - 1`)
+do
+    FILE_NAME=${array[var]}
+    FILE_DATE=$(date -r "$FILE_NAME" "+%y%m%d%H%M%S%N")
+
+    if [[ "$FILE_DATE" == "$LAST_DATE" ]]; then
+        TEMP_NUM=`expr $TEMP_NUM + 1`
+    else
+        LAST_DATE=${FILE_DATE}
+        TEMP_NUM=1
+    fi
+
+    if [ ${TEMP_NUM} -eq "1" ]; then
+        FILE_NAME="${dir}/${FILE_DATE}.${FILE_NAME#*.}"
+        mv -v "${array[var]}" ${FILE_NAME}
+        LAST_FILE_NAME=$FILE_NAME
+        LAST_FILE_CHANGE="${dir}/${FILE_DATE}(1).${FILE_NAME#*.}"
+    elif [ ${TEMP_NUM} -eq "2" ]; then
+        mv "$LAST_FILE_NAME" "$LAST_FILE_CHANGE"
+        FILE_NAME="${dir}/${FILE_DATE}(${TEMP_NUM}).${FILE_NAME#*.}"
+        mv -v "${array[var]}" ${FILE_NAME}
+    else
+        FILE_NAME="${dir}/${FILE_DATE}(${TEMP_NUM}).${FILE_NAME#*.}"
+        mv -v "${array[var]}" ${FILE_NAME}
+    fi
+done
+
+array=(${dir}/*.*)
+#2Pass
+echo "[2PASS] change FileName yymmdd"
+for var in $(seq 0 `expr ${#array[@]} - 1`)
+do
+    FILE_NAME=${array[var]}
+    FILE_DATE=$(date -r "$FILE_NAME" "+%y%m%d")
+
+    if [[ "$FILE_DATE" == "$LAST_DATE" ]]; then
+        TEMP_NUM=`expr $TEMP_NUM + 1`
+    else
+        LAST_DATE=${FILE_DATE}
+        TEMP_NUM=1
+    fi
+
+    if [ ${TEMP_NUM} -eq "1" ]; then
+        FILE_NAME="${dir}/${FILE_DATE}.${FILE_NAME#*.}"
+        mv -v "${array[var]}" ${FILE_NAME}
+        LAST_FILE_NAME=$FILE_NAME
+        LAST_FILE_CHANGE="${dir}/${FILE_DATE}(1).${FILE_NAME#*.}"
+    elif [ ${TEMP_NUM} -eq "2" ]; then
+        mv "$LAST_FILE_NAME" "$LAST_FILE_CHANGE"
+        FILE_NAME="${dir}/${FILE_DATE}(${TEMP_NUM}).${FILE_NAME#*.}"
+        mv -v "${array[var]}" ${FILE_NAME}
+    else
+        FILE_NAME="${dir}/${FILE_DATE}(${TEMP_NUM}).${FILE_NAME#*.}"
+        mv -v "${array[var]}" ${FILE_NAME}
+    fi
+done
+
+
+echo "Press Enter to exit"
+read any
 ```
 <br><br>
 

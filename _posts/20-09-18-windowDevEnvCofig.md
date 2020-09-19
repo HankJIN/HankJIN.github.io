@@ -84,6 +84,11 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
   ![ubuntu Instell](https://user-images.githubusercontent.com/42710591/94368164-c7a39d00-011d-11eb-90a2-0339ff33ab7b.PNG)
   (재부팅이 권장 사항은 아니지만, 바로 실행시 에러가 발생했다.)
   ![setting_ubuntuError](https://user-images.githubusercontent.com/42710591/94368162-c6727000-011d-11eb-8c23-e4e7cfd45bbd.PNG)
+
+  
+[__그럼에도 에러 발생시 wsl구성요소 업데이트를 진행해보자.__](https://docs.microsoft.com/ko-KR/windows/wsl/wsl2-kernel)
+
+
   5. PowerShell에서 다음을 진행한다.
       ```powershell
       wsl --list --verbose
